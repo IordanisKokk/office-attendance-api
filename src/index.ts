@@ -1,13 +1,23 @@
-import express, { Request, Response } from 'express';
+import "reflect-metadata";
+import express from "express";
+import { PostgresDataSource } from "./dbConfig";
 
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
-// Your routes with proper typing
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello Office Attendance Tracking World!');
-});
+PostgresDataSource.initialize()
+  .then(() => {
+    console.log("Database connected successfully!");
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+    app.get("/", (req, res) => {
+      console.log("FIXED");
+      res.send("Hello, Office Attendance APIIIIIIIIIIIII!");
+    });
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error("Error during database initialization:", error);
+  });
