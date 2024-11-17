@@ -4,12 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -r ts-node/register src/index.ts",
-    "build": "tsc",
-    "start": "ts-node src/index.ts",
-    "lint": "eslint 'src/**/*.{ts,tsx}'",
-    "prebuild": "rimraf dist",
-    "test": "echo \"No tests specified\" && exit 0"
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
