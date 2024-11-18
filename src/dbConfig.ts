@@ -1,5 +1,8 @@
 import { DataSource } from "typeorm";
 import * as dotenv from "dotenv";
+import { Attendances } from "./entities/Attendances";
+import { Office } from "./entities/Office";
+import { User } from "./entities/User";
 
 dotenv.config();
 
@@ -13,6 +16,8 @@ export const PostgresDataSource = new DataSource({
   synchronize: true, // Set to false in production
   logging: false,
   entities: [
-    // Add your entities here
+    User,
+    Office, 
+    Attendances
   ],
 });

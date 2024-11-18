@@ -1,16 +1,20 @@
 import "reflect-metadata";
 import express from "express";
 import { PostgresDataSource } from "./dbConfig";
+import { Attendances } from "./entities/Attendances";
+import { Office } from "./entities/Office";
+import { User } from "./entities/User";
+import { Role } from "./Interfaces/Role";
+import test from "node:test";
 
 const app = express();
 const PORT = 3000;
 
 PostgresDataSource.initialize()
-  .then(() => {
+  .then(async () => {
     console.log("Database connected successfully!");
 
     app.get("/", (req, res) => {
-      console.log("FIXED");
       res.send("Hello, Office Attendance APIIIIIIIIIIIII!");
     });
 
