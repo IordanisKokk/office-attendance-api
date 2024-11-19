@@ -1,8 +1,8 @@
 import { DataSource } from "typeorm";
 import * as dotenv from "dotenv";
-import { Attendances } from "./entities/Attendances";
-import { Office } from "./entities/Office";
-import { User } from "./entities/User";
+import { Attendances } from "./Entities/Attendances";
+import { Office } from "./Entities/Office";
+import { User } from "./Entities/User";
 
 dotenv.config();
 
