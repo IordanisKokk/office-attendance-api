@@ -2,11 +2,11 @@ import "reflect-metadata";
 import express from "express";
 import { PostgresDataSource } from "./dbConfig";
 import authRoutes from './Routes/AuthRoutes'; // Adjust the path based on your project structure
-import { Attendances } from "./entities/Attendances";
-import { Office } from "./entities/Office";
-import { User } from "./entities/User";
+import attendanceRoutes from "./Routes/AttendanceRoutes";
+import { Attendances } from "./Entities/Attendances";
+import { Office } from "./Entities/Office";
+import { User } from "./Entities/User";
 import { Role } from "./Interfaces/Role";
-import test from "node:test";
 
 const app = express();
 const PORT = 3000;
@@ -23,7 +23,11 @@ PostgresDataSource.initialize()
     });
 
     app.use("/auth", authRoutes);
+    app.use("/api/attendances", attendanceRoutes);
 
+    app.use((req, res) => {
+      res.status(404).json({ error: "Route not found" });
+    });
 
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);

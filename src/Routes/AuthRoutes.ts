@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { PostgresDataSource } from "../dbConfig";
-import { User } from "../entities/User";
+import { User } from "../Entities/User";
 import { RoleEnum } from "../Interfaces/Role";
 
 const router = express.Router();
