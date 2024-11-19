@@ -1,5 +1,6 @@
 import express from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { PostgresDataSource } from "../dbConfig";
 import { User } from "../entities/User";
 import { RoleEnum } from "../Interfaces/Role";
@@ -59,6 +60,46 @@ router.post("/login", async (req, res) => {
    *    Return an error response
    *
    */
+  const {username, password } = req.body;
+
+  // Input validation
+  if (!username || !password) {
+    res.status(400).json({ error: "Invalid username or password." });
+    return;
+  }
+
+  try {
+    const  userRepository = PostgresDataSource.getRepository(User);
+
+    const user = await userRepository.findOneBy({username});
+
+    if(!user) {
+      res.status(404).json({error: "User not found."});
+      return;
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+
+    if(!passwordMatch) {
+      res.status(401).json({error: "Invalid password."});
+      return;
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      {userID: user.id, username: user.username, role: user.role},
+      process.env.JWT_SECRET as string,
+      {expiresIn: "1h"}
+    )
+
+    res.status(200).json({message: "Login successful!", token});
+
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).json({ error: "Internal server error." });
+  }
+  
+
 });
 
 export default router;
