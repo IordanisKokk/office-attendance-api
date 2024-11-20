@@ -5,7 +5,20 @@ export interface AuthenticatedRequest extends Request {
   user?: { id: string; role: string };
 }
 
-const verifyRole = (requiredRole: string) => {
+interface DecodedToken {
+  userID: string;
+  username: string;
+  role: string;
+}
+
+const roleHasAccess = (role: string, requiredRole: string | string[]) => {
+  if (Array.isArray(requiredRole)) {
+    return requiredRole.includes(role);
+  }
+  return role === requiredRole;
+};
+
+const verifyRole = (requiredRole: string | string[]) => {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
 
@@ -20,16 +33,13 @@ const verifyRole = (requiredRole: string) => {
       const decodedJWT = jwt.verify(
         token,
         process.env.JWT_SECRET as string
-      ) as {
-        userID: string;
-        username: string;
-        role: string;
-      };
+      ) as DecodedToken;
 
       req.user = { id: decodedJWT.userID, role: decodedJWT.role };
 
-      if (decodedJWT.role !== requiredRole) {
+      if (!roleHasAccess(decodedJWT.role, requiredRole)) {
         res.status(403).json({ error: "Forbidden: Insufficient Access" });
+        return;
       }
 
       next();
