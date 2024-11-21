@@ -2,25 +2,14 @@ import express from "express";
 import verifyRole, {
   AuthenticatedRequest,
 } from "../Middleware/RoleVerificationMiddleware";
+import AttendanceController from "../Controllers/AttendanceController";
 
 const router = express.Router();
 
-/**
- * Route: GET /attendances
- * Access: User role
- */
-router.get(
-  "/",
-  verifyRole("User"),
-  (req: AuthenticatedRequest, res) => {
-    const userId = req.user!.id;
-    res.json({ message: `fetching attendances for user with id: ${userId}` });
-  }
-);
-
-router.get("/all", verifyRole("Admin"), (req: AuthenticatedRequest, res) => {
-    const userId = req.user!.id;
-    res.json({ message: `fetching all attendances for the Admin User with id ${userId}` });
-});
+router.get("/", verifyRole("User"), AttendanceController.getAllAttendances);
+router.get("/:id", verifyRole("User"), AttendanceController.getAttendance);
+router.post("/", verifyRole("User"), AttendanceController.createAttendance);
+router.put("/:id", verifyRole("User"), AttendanceController.updateAttendance);
+router.delete("/:id", verifyRole("User"), AttendanceController.deleteAttendance);
 
 export default router;
